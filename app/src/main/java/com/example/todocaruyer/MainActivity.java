@@ -5,8 +5,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +20,17 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
             }
     );
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_checked, tasks);
         listView.setAdapter(adapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+        //permet de recharger la liste des task si elle a été save
+        loadListFromFile();
 
         //permet de cliquer sur le btn flottant
         FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButton);
@@ -92,13 +107,57 @@ public class MainActivity extends AppCompatActivity {
                     tasks.remove(i);
                 }
             }
-
             listView.clearChoices();
             adapter.notifyDataSetChanged();
             return true;
+        }else if (item.getItemId() == R.id.action_save_list) {
+            saveListToFile();
+            return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void saveListToFile() {
+        try {
+            // Ouvrir le fichier en écriture
+            File file = new File(Environment.getExternalStorageDirectory(), "saveTaskList.txt");
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+
+            // Écrire les éléments de la liste dans le fichier
+            for (String task : tasks) {
+                writer.write(task);
+                writer.newLine();
+            }
+            // Fermer le fichier
+            writer.close();
+            Toast.makeText(this, "Liste sauvegardée", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erreur lors de la sauvegarde de la liste", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void loadListFromFile() {
+        try {
+            // Ouverture du fichier texte dans le répertoire de stockage externe
+            File file = new File(Environment.getExternalStorageDirectory(), "saveTaskList.txt");
+            // Création du reader pour lire le contenu du fichier
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line;
+
+            // Lecture de chaque ligne du fichier et ajout de la tâche à la liste
+            while ((line = reader.readLine()) != null) {
+                tasks.add(line);
+            }
+            // Fermeture du reader
+            reader.close();
+            // Notification de l'adaptateur que les données ont changé
+            adapter.notifyDataSetChanged();
+            Toast.makeText(this, "Liste chargée", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erreur lors du chargement de la liste", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

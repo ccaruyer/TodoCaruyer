@@ -3,4 +3,7 @@
     <item
         android:id="@+id/action_delete_selected"
         android:title="Effacer sélectionnés" />
+    <item
+        android:id="@+id/action_save_list"
+        android:title="Enregister la liste" />
 </menu>

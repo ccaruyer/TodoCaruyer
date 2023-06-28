@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TodoCaruyer</string>
+    <string name="newTask">Tâche à ajouter</string>
+    <string name="btnValid">VALIDER</string>
+    <string name="btnCancel">ANNULER</string>
+    <string name="taskAdded">Tâche ajoutée : %s</string>
+    <string name="labelAddTask">Libellé de la tâche</string>
 </resources>

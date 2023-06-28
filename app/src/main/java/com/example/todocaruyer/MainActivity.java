@@ -3,10 +3,13 @@ package com.example.todocaruyer;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.SparseBooleanArray;
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     //private String[] tasks = {"Tâche 1", "Tâche 2", "Tâche 3", "Tâche 4", "Tâche 5"};
     private ArrayList<String> tasks = new ArrayList<>();
     private ArrayAdapter<String> adapter;
-    private static final int REQUEST_CODE_ADD_TASK = 1;
+    public static final String WRITE_EXTERNAL_STORAGE = null;
 
     private ActivityResultLauncher<Intent> addTaskLaucher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
